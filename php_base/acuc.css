@@ -1,0 +1,11 @@
+img {border: 0px;}
+.titleHeader {font-size: xx-large; font-weight: bold; text-align: center; font-family: sans-serif; font-variant:small-caps; line-height: 10px;}
+.subtitleHeader {font-size: x-large; font-weight: bold; text-align: center; font-family: sans-serif; font-variant:small-caps; line-height: 10px;}
+.secondaryHeader{font-size: large; font-weight: bold; text-align: center; font-family: sans-serif; font-variant:small-caps;line-height: 5px;}
+.resultBlock { background-color: #A0A0A0; color: #000000; font-family: monospace;}
+.codeBlock{ font-family: monospace;}
+.permaLinkBlock{ font-family: monospace; font-size: xx-small; }
+.tableList{ margin: 0px 0px 0px 0px; padding: 0px 0px 0px 0px; width: 48px; line-height: 0px; font-family: monospace; vertical-align: middle; }
+.central{ vertical-align: middle; }
+.tableBG0{ background-color: #C0C0C0;}
+.tableBG1{ background-color: #E0E0E0;}
