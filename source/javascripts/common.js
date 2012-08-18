@@ -116,20 +116,12 @@ function acucBitShift(keycode, shift) {
   return ([]).concat(buffer.slice(0, 1), keycode.slice(1, 1), buffer.slice(1, 19));
 }
 
-//////////////////////////////////////////////////////
-// acucBitReverse( $arrayCode )
-//
-//////////////////////////////////////////////////////
-function acucBitReverse( $arrayCode )
-{
-  $arrayReturnCode = $arrayCode;
-  for( $idx = 0; $idx < 21; $idx++)
-  {
-if($idx != 1)
-  $arrayReturnCode[$idx] ^= 0xff;
+function acucBitReverse(code) {
+  var copy = code.slice(0);
+  for (var i = 0; i < 21; i++) {
+    i !== 1 && (copy[i] ^= 0xff);
   }
-
-  return $arrayReturnCode;
+  return copy;
 }
 
 //////////////////////////////////////////////////////
