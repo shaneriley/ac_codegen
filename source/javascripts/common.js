@@ -124,39 +124,26 @@ function acucBitReverse(code) {
   return copy;
 }
 
-//////////////////////////////////////////////////////
-// acucBitArrangeReverse( $arrayCode )
-//
-//////////////////////////////////////////////////////
-function acucBitArrangeReverse( $arrayCode )
-{
-  $arrayBuffer = array_merge(
-          array_slice( $arrayCode, 0, 1),
-          array_slice( $arrayCode, 2, 19));
+function acucBitArrangeReverse(code) {
+  var buffer = ([]).concat(code.slice(0, 1), code.slice(2, 19)),
+      output_buffer = [],
+      source, destination;
 
-  $arrayOutputBuffer = array();
-
-  for( $idx = 0; $idx < 20; $idx++)
-  {
-$sourceValue = $arrayBuffer[19 - $idx];
-$destValue =
-    ( ( $sourceValue & 0x80 ) >> 7) |
-    ( ( $sourceValue & 0x40 ) >> 5) |
-    ( ( $sourceValue & 0x20 ) >> 3) |
-    ( ( $sourceValue & 0x10 ) >> 1) |
-    ( ( $sourceValue & 0x08 ) << 1) |
-    ( ( $sourceValue & 0x04 ) << 3) |
-    ( ( $sourceValue & 0x02 ) << 5) |
-    ( ( $sourceValue & 0x01 ) << 7);
-$arrayOutputBuffer[$idx] = $destValue;
+  for (var i = 0; i < 20; i++) {
+    source = buffer[19 - i];
+    destination =
+        ((source & 0x80) >> 7) |
+        ((source & 0x40) >> 5) |
+        ((source & 0x20) >> 3) |
+        ((source & 0x10) >> 1) |
+        ((source & 0x08) << 1) |
+        ((source & 0x04) << 3) |
+        ((source & 0x02) << 5) |
+        ((source & 0x01) << 7);
+    output_buffer[i] = destination;
   }
 
-  $arrayReturnCode = array_merge(
-            array_slice($arrayOutputBuffer,0, 1),
-            array_slice($arrayCode, 1, 1),
-            array_slice($arrayOutputBuffer, 1, 19));
-
-  return $arrayReturnCode;
+  return ([]).concat(output_buffer.slice(0, 1), code.slice(1, 1), output_buffer.slice(1, 19));
 }
 
 //////////////////////////////////////////////////////
