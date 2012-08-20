@@ -12,17 +12,6 @@ function acucAdjustLetter(passcode) {
   return adjusted_passcode;
 }
 
-//////////////////////////////////////////////////////
-// acucPassToCode( $arrayPasscode )
-//
-// Converts the passcode to usable code for the
-// decoder.
-//
-// Arguments:
-//
-//   $arrayPasscode
-// The passcode to decode.
-//////////////////////////////////////////////////////
 function acucPassToCode(passcode) {
   var code = passcode.slice(0),
       idx;
@@ -38,52 +27,32 @@ function acucPassToCode(passcode) {
   return code;
 }
 
-//////////////////////////////////////////////////////
-// acucTo8Bit( $arrayPasscode )
-//
-// Converts the passcode to an 8-bit code. The
-// passcode originally is stored as a 6-bit code,
-// after which the code gets converted to a readable
-// string. This function turns it back to 8-bit.
-//
-// Arguments:
-//
-//   $arrayPasscode
-// The passcode to convert to an 8-bit code.
-//////////////////////////////////////////////////////
-function acucTo8Bit( $arrayPasscode )
-{
-  $returnArrayCode = array();
+function acucTo8Bit(code) {
+  var 8bit_code = [],
+      bit6_idx = 0,
+      bit8_idx = 0,
+      byte6_idx = 0,
+      byte8_idx = 0,
+      value_byte = 0,
+      current_bit = 0;
 
-  $bit6Idx = 0;
-  $bit8Idx = 0;
-  $byte6Idx = 0;
-  $byte8Idx = 0;
+  while (true) {
+    current_bit = (code[byte6_idx] >> bit6_idx) & 0x01;
+    current_bit <<= bit8_idx;
+    bit6_idx++;
+    bit8_idx++;
+    value_byte |= current_bit;
 
-  $valueByte = 0;
-  $currentBit = 0;
-
-  while( true )
-  {
-    $currentBit = ( $arrayPasscode[ $byte6Idx ] >> $bit6Idx ) & 0x01;
-    $currentBit <<= $bit8Idx;
-    $bit6Idx++;
-    $bit8Idx++;
-    $valueByte |= $currentBit;
-
-    if($bit8Idx == 8)
-    {
-      $returnArrayCode[ $byte8Idx ] = $valueByte;
-      $byte8Idx++;
-      if( $byte8Idx == 21 )
-        return $returnArrayCode;
-      $bit8Idx = 0;
-      $valueByte = 0;
+    if (bit8_idx === 8) {
+      8bit_code[byte8_idx] = value_byte;
+      byte8_idx++;
+      if (byte8_idx === 21) { return 8bit_code; }
+      bit8_idx = 0;
+      value_byte = 0;
     }
-    if($bit6Idx == 6)
-    {
-      $bit6Idx = 0;
-      $byte6Idx++;
+    if (bit6_idx === 6) {
+      bit6_idx = 0;
+      byte6_idx++;
     }
   }
 }
