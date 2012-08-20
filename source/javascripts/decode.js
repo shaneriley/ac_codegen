@@ -87,38 +87,29 @@ function acucDecodeBitShuffle(code, used_key) {
   return result_code;
 }
 
-//////////////////////////////////////////////////////
-// acucDecodeBitCode( $arrayCode )
-//
-//////////////////////////////////////////////////////
-function acucDecodeBitCode( $arrayCode )
-{
-  $arrayReturnCode = $arrayCode;
-  $codeMethod = $arrayCode[1] & 0x0f;
+function acucDecodeBitCode(code) {
+  var decoded = code.slice(0),
+      code_method = code[1] & 0x0f;
 
-  if( $codeMethod > 12 )
-  {
-    $arrayReturnCode = acucBitShift( $arrayReturnCode, ( 0 - $codeMethod ) * 3 );
-    $arrayReturnCode = acucBitReverse( $arrayReturnCode );
-    $arrayReturnCode = acucBitArrangeReverse( $arrayReturnCode );
+  if (code_method > 12) {
+    decoded = acucBitShift(decoded, (0 - code_method) * 3);
+    decoded = acucBitReverse(decoded);
+    decoded = acucBitArrangeReverse(decoded);
   }
-  elseif( $codeMethod > 8 )
-  {
-    $arrayReturnCode = acucBitShift( $arrayReturnCode, $codeMethod * 5 );
-    $arrayReturnCode = acucBitArrangeReverse( $arrayReturnCode );
+  else if (code_method > 8) {
+    decoded = acucBitShift(decoded, code_method * 5);
+    decoded = acucBitArrangeReverse(decoded);
   }
-  elseif( $codeMethod > 4 )
-  {
-    $arrayReturnCode = acucBitReverse( $arrayReturnCode );
-    $arrayReturnCode = acucBitShift( $arrayReturnCode, $codeMethod * 5 );
+  else if (code_method > 4) {
+    decoded = acucBitReverse(decoded);
+    decoded = acucBitShift(decoded, code_method * 5);
   }
-  else
-  {
-    $arrayReturnCode = acucBitArrangeReverse( $arrayReturnCode );
-    $arrayReturnCode = acucBitShift( $arrayReturnCode, ( 0 - $codeMethod ) * 3 );
+  else {
+    decoded = acucBitArrangeReverse(decoded);
+    decoded = acucBitShift(decoded, (0 - code_method) * 3);
   }
 
-  return $arrayReturnCode;
+  return decoded;
 }
 
 //////////////////////////////////////////////////////
