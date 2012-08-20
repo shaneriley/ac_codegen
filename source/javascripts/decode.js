@@ -57,50 +57,34 @@ function acucTo8Bit(code) {
   }
 }
 
-//////////////////////////////////////////////////////
-// acucDecodeBitShuffle( $arrayCode , $usedKey)
-//
-//////////////////////////////////////////////////////
-function acucDecodeBitShuffle( $arrayCode, $usedKey)
-{
-  global $acucSelectIndexTable;
+function acucDecodeBitShuffle(code, used_key) {
+  var buffer = [],
+      char_offset = used_key ? 2 : 13,
+      char_count = used_key ? 20 : 19,
+      table_idx, index_table,
+      output_offset, value_byte,
+      output_buffer = [],
+      result_code;
 
-  $outputBuffer = array();
+  buffer = code.slice(0, char_offset).concat(code.slice(char_offset + 1, 20 - char_offset));
 
-  if( $usedKey == 0 )
-  {
-    $charOffset = 13;
-    $charCount = 19;
-  }
-  else
-  {
-    $charOffset = 2;
-    $charCount = 20;
-  }
+  table_idx = (code[char_offset] << 2) & 0x0c;
+  index_table = acucSelectIndexTable[table_idx >> 2];
 
-  $arrayBuffer = array_merge( array_slice( $arrayCode, 0, $charOffset), array_slice( $arrayCode, $charOffset + 1, 20 - $charOffset) );
-
-  $tableNumber = ( $arrayCode[ $charOffset ] << 2 ) &0x0c;
-  $indexTable = $acucSelectIndexTable[ $tableNumber >> 2 ];
-
-  for( $idx = 0; $idx < $charCount; $idx++ )
-  {
-    for($tIdx = 0; $tIdx < 8; $tIdx++)
-    {
-      $outputOffset = $indexTable[ $tIdx ] + $idx;
-      $outputOffset %= $charCount;
-      $valueByte = $arrayBuffer[$outputOffset];
-      $valueByte = ($valueByte >> $tIdx ) & 0x01;
-      $valueByte <<= $tIdx;
-      $arrayOutputBuffer[$idx] |= $valueByte;
+  for (i = 0; i < char_count; i++) {
+    for (j = 0; j < 8; j++) {
+      output_offset = index_table[j] + i;
+      output_offset %= char_count;
+      value_byte = buffer[output_offset];
+      value_byte = (value_byte >> j) & 0x01;
+      value_byte <<= j;
+      output_buffer[i] |= value_byte;
     }
   }
 
-  $arrayReturnCode = array_merge( array_slice( $arrayOutputBuffer, 0, $charOffset),
-                    array_slice( $arrayCode, $charOffset, 1),
-                    array_slice( $arrayOutputBuffer, $charOffset, 20-$charOffset));
-  $arrayReturnCode = array_merge( $arrayReturnCode, array_slice($arrayCode, count($arrayReturnCode)));
-  return $arrayReturnCode;
+  result_code = output_buffer.slice(0, char_offset).concat(code.slice(char_offset, 1), output_buffer.slice(char_offset, 20 - char_offset));
+  result_code = result_code.concat(code.slice(result_code.length));
+  return result_code;
 }
 
 //////////////////////////////////////////////////////
