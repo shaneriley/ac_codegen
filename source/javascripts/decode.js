@@ -23,23 +23,19 @@ function acucAdjustLetter(passcode) {
 //   $arrayPasscode
 // The passcode to decode.
 //////////////////////////////////////////////////////
-function acucPassToCode( $arrayPasscode )
-{
-  global $acucUsableChars;
+function acucPassToCode(passcode) {
+  var code = passcode.slice(0),
+      idx;
 
-  $arrayReturnPasscode = $arrayPasscode;
+  if (count(passcode) < 28) { return false; }
 
-  if( count($arrayPasscode) < 28 )
-    return false;
-
-  for( $idx = 0; $idx < 28; $idx++ )
-  {
-    $arrayReturnPasscode[$idx] = array_search( $arrayPasscode[$idx], $acucUsableChars);
-    if( $arrayReturnPasscode[$idx] === false )
-    return false;
+  for (var i = 0; i < 28; i++) {
+    idx = acucUsableChars.indexOf(passcode[i]);
+    if (idx === -1) { return false; }
+    code[i] = passcode[idx];
   }
 
-  return $arrayReturnPasscode;
+  return code;
 }
 
 //////////////////////////////////////////////////////
