@@ -112,47 +112,36 @@ function acucDecodeBitCode(code) {
   return decoded;
 }
 
-//////////////////////////////////////////////////////
-// acucDecodeRSACipher( $arrayCode )
-//
-//////////////////////////////////////////////////////
-function acucDecodeRSACipher( $arrayCode )
-{
-  $modCount = 0;
-  $arrayReturnCode = $arrayCode;
+function acucDecodeRSACipher(code) {
+  var mod_count = 0,
+      decoded = code.slice(0),
+      prime_params = acucGetRSAKeyCode(code),
+      prime_1 = prime_params[0],
+      prime_2 = prime_params[1],
+      prime_3 = prime_params[2],
+      index_table = prime_params[3],
+      prime_product = prime_1 * prime_2,
+      less_product = (prime_1 - 1) * (prime_2 - 1),
+      mod_value, value_byte, end_value, const_value_byte;
 
-  $primeParams = acucGetRSAKeyCode( $arrayCode );
+  do {
+    mod_count++;
+    end_value = (mod_count * less_product + 1) % prime_3;
+    mod_value = (mod_count * less_product + 1) / prime_3;
+  } while (end_value !== 0);
 
-  $prime1 = $primeParams[0];
-  $prime2 = $primeParams[1];
-  $prime3 = $primeParams[2];
-  $indexTable = $primeParams[3];
-
-  $primeProduct = $prime1 * $prime2;
-
-  $lessProduct = ( $prime1 - 1 ) * ( $prime2 - 1 );
-
-  do
-  {
-    $modCount++;
-    $loopEndValue = ($modCount * $lessProduct + 1 ) % $prime3;
-    $modValue = ($modCount * $lessProduct + 1 ) / $prime3;
-  } while( $loopEndValue != 0 );
-
-  for( $idx = 0; $idx < 8; $idx++ )
-  {
-    $valueByte = $arrayCode[ $indexTable[$idx] ];
-    $valueByte |= ( ( $arrayCode[20] >> $idx ) << 8 ) & 0x0100;
-    $currentValueByte = $valueByte;
-    for( $mIdx = 0; $mIdx < $modValue - 1; $mIdx++ )
-    {
-      $valueByte = ( $valueByte * $currentValueByte ) % $primeProduct;
+  for (var i = 0; i < 8; i++) {
+    value_byte = code[index_table[i]];
+    value_byte |= ((code[20] >> i) << 8) & 0x0100;
+    const_value_byte = value_byte;
+    for (var j = 0; j < mod_value - 1; j++) {
+      value_byte = (value_byte * const_value_byte) % prime_product;
     }
 
-    $arrayReturnCode[ $indexTable[$idx] ] = $valueByte & 0xff;
+    decoded[index_table[i]] = value_byte & 0xff;
   }
 
-  return $arrayReturnCode;
+  return decoded;
 }
 
 //////////////////////////////////////////////////////
